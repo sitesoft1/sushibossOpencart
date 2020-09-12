@@ -1,0 +1,222 @@
+.tm-filter-pro table.attributes > tbody > tr:last-child > td, .tm-filter-pro table.attributes table.list tr:last-child td {
+	border-bottom: none;
+}
+
+.tm-filter-pro table.attributes table.form {
+	border: none;
+	margin: -5px;
+}
+
+.tm-filter-pro table.attributes table.list td {
+	border-right: none !important;
+}
+
+.tm-filter-pro table.attributes {
+	border-bottom: 1px solid #ccc;
+}
+
+.tm-filter-pro table.attributes > tbody > tr:hover, table.attributes > tbody > tr:hover td {
+	background: none !important;
+}
+
+.tm-filter-pro table.attributes table.list tr:hover td {
+	background-color: #FFFFCB !important;
+}
+
+.tm-filter-pro .table thead th {
+	background: #f3f3f3;
+	vertical-align: middle !important;
+}
+
+.tm-filter-pro .table.table-without-thead tbody tr:first-child td {
+	border-top: none;
+}
+
+.tm-filter-pro .vertical-middle {
+	vertical-align: middle !important;
+}
+
+.tm-filter-pro .table thead {
+	font-weight: bold;
+}
+
+.tm-filter-pro .box > .heading .buttons {
+	padding-top: 3px;
+}
+
+.tm-filter-pro .btn {
+	text-decoration: none;
+}
+
+.tm-filter-pro, .tm-filter-pro td, .tm-filter-pro th {
+	font-size: 13px;
+}
+
+.tm-filter-pro .tabs-left, .tm-filter-pro .tabs-right {
+    border-bottom: none;
+    padding-top: 40px;
+}
+.tm-filter-pro .tabs-left {
+    border-right: 1px solid #ddd;
+}
+.tm-filter-pro .tabs-right {
+    border-left: 1px solid #ddd;
+}
+.tm-filter-pro .tabs-left>li, .tm-filter-pro .tabs-right>li {
+    float: none;
+    margin-bottom: 2px;
+}
+.tm-filter-pro .tabs-left>li {
+    margin-right: -1px;
+}
+.tm-filter-pro .tabs-right>li {
+    margin-left: -1px;
+}
+.tm-filter-pro .tabs-left>li.active>a, .tm-filter-pro .tabs-left>li.active>a:hover, .tm-filter-pro .tabs-left>li.active>a:focus {
+    border-bottom-color: #ddd;
+    border-right-color: transparent;
+}
+.tm-filter-pro .tabs-right>li.active>a, .tm-filter-pro .tabs-right>li.active>a:hover, .tm-filter-pro .tabs-right>li.active>a:focus {
+    border-bottom: 1px solid #ddd;
+    border-left-color: transparent;
+}
+.tm-filter-pro .tabs-left>li>a {
+    border-radius: 4px 0 0 4px;
+    margin-right: 0;
+    display:block;
+}
+.tm-filter-pro .tabs-right>li>a {
+    border-radius: 0 4px 4px 0;
+    margin-right: 0;
+}
+
+.tm-filter-pro .modal {
+	overflow-y: hidden;
+}
+.tm-filter-pro .modal-body {
+	overflow-y: auto;
+	padding-bottom: 0;
+}
+.tm-filter-pro .modal-1000 .modal-dialog {
+	width: 960px;
+}
+.tm-filter-pro > .box > .content {
+	overflow: visible;
+}
+
+.tm-filter-pro .table-tbody tbody tr:first-child td {
+	border-top: none;
+}
+.tm-filter-pro .table-thead-bg thead td, .tm-filter-pro .table-thead-bg thead th {
+	background-color: #EFEFEF;
+}
+.tm-filter-pro .table-thead-bg thead td.btn-info, .tm-filter-pro .table-thead-bg thead th.btn-info {
+	background-color: #5BC0DE;
+}
+
+.tm-filter-pro #group-products td code {
+	color: #000;
+	font-weight: bold;
+}
+
+a.cke_button {
+	height: auto !important;
+}
+
+.tm-filter-pro .bs-callout {
+	border-left: 3px solid #eee;
+	margin: 0 0 20px 0;
+	padding: 20px;
+}
+.tm-filter-pro .bs-callout h3 {
+	margin-top: 0;
+	font-size: 16px;
+	font-weight: bold;
+}
+.tm-filter-pro .bs-callout-info {
+	background: #F4F8FA;
+	border-color: #5BC0DE;
+}
+.tm-filter-pro .bs-callout-info h3 {
+	color: #5BC0DE;
+}
+
+.tm-filter-pro blockquote p {
+	font-size: 14px;
+}
+.tm-filter-pro blockquote p input[type="checkbox"] {
+	vertical-align: middle;
+	margin-top: -2px;
+}
+.tm-filter-pro blockquote footer {
+	color: #686868;
+	font-size: 12px;
+}
+.tm-filter-pro blockquote footer code {
+	color: #000;
+	font-size: 12px;
+}
+.tm-filter-pro .bg-primary {
+    background-color: #428BCA;
+    color: #FFFFFF;
+	padding: 2px 5px;
+}
+.tm-filter-pro .bg-danger {
+    background-color: #F2DEDE;
+	padding: 2px 5px;
+}
+.tm-filter-pro label {
+	font-weight: normal;
+}
+.tm-filter-pro .sort-order-items {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.tm-filter-pro .sort-order-items > li {
+	cursor: pointer;
+	display: block;
+}
+.tm-filter-pro .sort-order-items > li > span {
+	margin: 2px;
+	padding: 8px 10px;
+	background: #ededed;
+	display: block;
+}
+.tm-filter-pro .btn-group .btn {
+	opacity: 0.5;
+}
+.tm-filter-pro .btn-group .btn.active, 
+.tm-filter-pro .btn-group .btn.enable {
+	opacity: 1;
+}
+.tm-filter-pro .v-align-middle {
+	vertical-align: middle;
+}
+
+.tm-filter-pro .table-tbody tr:first-child td {
+	border-top: none;
+}
+.tm-filter-pro span.help {
+	display: block;
+	font-size: 11px;
+}
+.tm-filter-pro .scrollbox {
+	width: 300px;
+	height: 150px;
+	overflow-y: auto;
+	border: 1px solid #ccc;
+}
+.tm-filter-pro .scrollbox > div {
+	padding: 3px 3px 3px 7px;
+}
+.tm-filter-pro .scrollbox > div.odd {
+	background: #f0f0f0;
+}
+.tm-filter-pro a[onclick] {
+	cursor: pointer;
+}
+
+#column-left + #content {
+	position: relative;
+}
