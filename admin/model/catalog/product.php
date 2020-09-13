@@ -6,6 +6,11 @@ class ModelCatalogProduct extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "product SET model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', ean = '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', isbn = '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', location = '" . $this->db->escape($data['location']) . "', quantity = '" . (int)$data['quantity'] . "', minimum = '" . (int)$data['minimum'] . "', subtract = '" . (int)$data['subtract'] . "', stock_status_id = '" . (int)$data['stock_status_id'] . "', date_available = '" . $this->db->escape($data['date_available']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', shipping = '" . (int)$data['shipping'] . "', price = '" . (float)$data['price'] . "', points = '" . (int)$data['points'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', status = '" . (int)$data['status'] . "', tax_class_id = '" . (int)$data['tax_class_id'] . "', sort_order = '" . (int)$data['sort_order'] . "', date_added = NOW()");
 
 		$product_id = $this->db->getLastId();
+		
+		//for WC
+        $wc_price = (float)$data['price'];
+        $wc_price = round($wc_price);
+		//for WC END
 
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "product SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
@@ -13,6 +18,13 @@ class ModelCatalogProduct extends Model {
 
 		foreach ($data['product_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+		    //for wc
+			if($language_id == 2){
+		        $wc_product_name = $value['name'];
+		        $wc_product_description = htmlspecialchars_decode($value['description']);
+		        
+            }
+            //for wc END
 		}
 
 		if (isset($data['product_store'])) {
@@ -121,6 +133,31 @@ class ModelCatalogProduct extends Model {
 		$this->cache->delete('product');
 
 		$this->event->trigger('post.admin.product.add', $product_id);
+		
+		//Send product to WooCommerce ################################################
+        $queryUrl = 'https://sushisetboss.com/_oc_import/import.php';
+        
+        $queryData = http_build_query(array(
+            'wc_product_name' => $wc_product_name,
+            'wc_price' => $wc_price,
+            'wc_product_description' => $wc_product_description,
+        ));
+        
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_POST => 1,
+            CURLOPT_HEADER => 0,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $queryUrl,
+            CURLOPT_POSTFIELDS => $queryData,
+        ));
+        
+        $result = curl_exec($curl);
+        curl_close($curl);
+        file_put_contents(DIR_LOGS . '/wc_add_product_log', print_r($result,true));
+        //var_dump($result);
+		//Send product to WooCommerce END #############################################
 
 		return $product_id;
 	}
