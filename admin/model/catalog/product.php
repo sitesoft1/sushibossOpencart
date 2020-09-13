@@ -10,6 +10,7 @@ class ModelCatalogProduct extends Model {
 		//for WC
         $wc_price = (float)$data['price'];
         $wc_price = round($wc_price);
+        $wc_model = $data['model'];
 		//for WC END
 
 		if (isset($data['image'])) {
@@ -141,6 +142,7 @@ class ModelCatalogProduct extends Model {
             'wc_product_name' => $wc_product_name,
             'wc_price' => $wc_price,
             'wc_product_description' => $wc_product_description,
+            'wc_model' => $wc_model,
         ));
         
         $curl = curl_init();
