@@ -11,10 +11,13 @@ class ModelCatalogProduct extends Model {
         $wc_price = (float)$data['price'];
         $wc_price = round($wc_price);
         $wc_model = $data['model'];
+        $wc_product_images = [];
 		//for WC END
 
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "product SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
+            //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];
+            $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];
 		}
 
 		foreach ($data['product_description'] as $language_id => $value) {
@@ -77,6 +80,9 @@ class ModelCatalogProduct extends Model {
 		if (isset($data['product_image'])) {
 			foreach ($data['product_image'] as $product_image) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape($product_image['image']) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
+                //for wc
+				$wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];
+                //for wc END
 			}
 		}
 
@@ -143,6 +149,7 @@ class ModelCatalogProduct extends Model {
             'wc_price' => $wc_price,
             'wc_product_description' => $wc_product_description,
             'wc_model' => $wc_model,
+            'wc_product_images' => $wc_product_images,
         ));
         
         $curl = curl_init();

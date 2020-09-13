@@ -487,6 +487,16 @@ class ControllerCatalogCategory extends Controller {
 		} else {
 			$data['column'] = 1;
 		}
+		
+		//wc ###########################################################
+        if (isset($this->request->post['wc_category_id'])) {
+            $data['wc_category_id'] = $this->request->post['wc_category_id'];
+        } elseif (!empty($category_info)) {
+            $data['wc_category_id'] = $category_info['wc_category_id'];
+        } else {
+            $data['wc_category_id'] = '';
+        }
+		//wc END #######################################################
 
 		if (isset($this->request->post['sort_order'])) {
 			$data['sort_order'] = $this->request->post['sort_order'];
