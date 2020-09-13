@@ -749,7 +749,7 @@ class ModelCatalogProduct extends Model {
         //form product data END
     
         //form request data
-        $queryUrl = 'https://sushisetboss.com/_oc_import/import.php';
+        $queryUrl = 'https://sushisetboss.com/_oc_import/add_oc_product.php';
         $queryData = array(
             'wc_product_name' => $wc_product_name,
             'wc_price' => $wc_price,
