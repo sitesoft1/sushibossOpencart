@@ -9,10 +9,19 @@ class ModelCatalogProduct extends Model {
 		
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "product SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
+            //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];
+            $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];
 		}
 
 		foreach ($data['product_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+		    //for wc
+			if($language_id == 2){
+		        $wc_product_name = $value['name'];
+		        $wc_product_description = htmlspecialchars_decode($value['description']);
+		        
+            }
+            //for wc END
 		}
 
 		if (isset($data['product_store'])) {
@@ -64,6 +73,9 @@ class ModelCatalogProduct extends Model {
 		if (isset($data['product_image'])) {
 			foreach ($data['product_image'] as $product_image) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape($product_image['image']) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
+                //for wc
+				$wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];
+                //for wc END
 			}
 		}
 
@@ -122,9 +134,48 @@ class ModelCatalogProduct extends Model {
 
 		$this->event->trigger('post.admin.product.add', $product_id);
 		
-		//Send product to WooCommerce
+		//Send product to WooCommerce ################################################
         $wc_product_id = $this->addProductToWc($data);
-		//Send product to WooCommerce END
+        
+        
+        /*
+        $queryUrl = 'https://sushisetboss.com/_oc_import/import.php';
+        $queryData = array(
+            'wc_product_name' => $wc_product_name,
+            'wc_price' => $wc_price,
+            'wc_product_description' => $wc_product_description,
+            'wc_model' => $wc_model,
+            'wc_product_images' => $wc_product_images,
+        );
+        $this->wcCurl($queryData, $queryUrl);
+        */
+        
+        /*
+        $queryUrl = 'https://sushisetboss.com/_oc_import/import.php';
+        
+        $queryData = http_build_query(array(
+            'wc_product_name' => $wc_product_name,
+            'wc_price' => $wc_price,
+            'wc_product_description' => $wc_product_description,
+            'wc_model' => $wc_model,
+            'wc_product_images' => $wc_product_images,
+        ));
+        
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_POST => 1,
+            CURLOPT_HEADER => 0,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $queryUrl,
+            CURLOPT_POSTFIELDS => $queryData,
+        ));
+        
+        $result = curl_exec($curl);
+        curl_close($curl);
+        file_put_contents(DIR_LOGS . '/wc_log.txt', print_r($result,true));
+        */
+		//Send product to WooCommerce END #############################################
 
 		return $product_id;
 	}
@@ -725,25 +776,20 @@ class ModelCatalogProduct extends Model {
         $wc_price = round($wc_price);
         $wc_model = $data['model'];
         $wc_product_images = [];
-        
+    
+        if (isset($data['image'])) {
+            //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];
+            $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];
+        }
+    
         foreach ($data['product_description'] as $language_id => $value) {
+            //for wc
             if($language_id == 2){
                 $wc_product_name = $value['name'];
                 $wc_product_description = htmlspecialchars_decode($value['description']);
             
             }
-        }
-    
-        if (isset($data['image'])) {
-            //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];// FOR PRODUCTION
-            $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];// FOR LOCALHOST
-        }
-    
-        if (isset($data['product_image'])) {
-            foreach ($data['product_image'] as $product_image) {
-                //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $product_image['image'];// FOR PRODUCTION
-                $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
-            }
+            //for wc END
         }
         
         //form product data END
