@@ -190,7 +190,7 @@
               <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-wc-category-id">id категории в wordpress</label>
                     <div class="col-sm-10">
-                        <input type="text" name="wc_category_id" value="<?php echo $wc_category_id; ?>" placeholder="Введите id категории в WooCommerce для синхронизации с сайтом sushisetboss.com" id="input-wc-category-id" class="form-control" />
+                        <input type="text" name="wc_category_id" value="<?php echo $wc_category_id; ?>" placeholder="Введите id категории в WooCommerce для синхронизации с сайтом sushisetboss.com (tag_ID)" id="input-wc-category-id" class="form-control" />
                     </div>
               </div>
             </div>
