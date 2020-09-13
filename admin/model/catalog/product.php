@@ -714,8 +714,14 @@ class ModelCatalogProduct extends Model {
     
         $result = curl_exec($curl);
         curl_close($curl);
-        file_put_contents(DIR_LOGS . '/wc_log.txt', print_r($result,true));
+        //file_put_contents(DIR_LOGS . '/wc_log.txt', print_r($result,true));
+        $this->wcLog('wc_log', $result);
         return $result;
+    }
+    
+    public function wcLog($filename, $data)
+    {
+        file_put_contents(DIR_LOGS . '/'. $filename . '.txt', print_r($data,true));
     }
     
     public function addProductToWc($data)
@@ -745,6 +751,19 @@ class ModelCatalogProduct extends Model {
                 $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
             }
         }
+    
+        $wc_categories = [];
+        if (isset($data['product_category'])) {
+            foreach ($data['product_category'] as $category_id) {
+               $query = $this->db->query("SELECT wc_category_id FROM " . DB_PREFIX . "category WHERE category_id = '" . (int)$category_id . "'");
+               $wc_categories[] = $query->row['wc_category_id'];
+            }
+        }
+        
+        if(empty($wc_categories)){
+            $wc_categories[] = 22;//uncategorized
+        }
+        //$this->wcLog('wc_cats_log', $wc_categories);
         
         //form product data END
     
@@ -756,6 +775,7 @@ class ModelCatalogProduct extends Model {
             'wc_product_description' => $wc_product_description,
             'wc_model' => $wc_model,
             'wc_product_images' => $wc_product_images,
+            'wc_categories' => $wc_categories,
         );
         //form request data END
         //send request
