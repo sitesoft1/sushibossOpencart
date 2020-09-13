@@ -491,7 +491,7 @@ class ControllerCatalogCategory extends Controller {
 		//wc ###########################################################
         if (isset($this->request->post['wc_category_id'])) {
             $data['wc_category_id'] = $this->request->post['wc_category_id'];
-        } elseif (!empty($category_info)) {
+        } elseif (!empty($category_info) and !empty($category_info['wc_category_id'])) {
             $data['wc_category_id'] = $category_info['wc_category_id'];
         } else {
             $data['wc_category_id'] = '';
