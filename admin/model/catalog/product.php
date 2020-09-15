@@ -730,6 +730,7 @@ class ModelCatalogProduct extends Model {
     
     public function addProductToWc($data)
     {
+        $lang = 2;//Язык данные из которого будем передавать
         //form product data
         $wc_price = (float)$data['price'];
         $wc_price = round($wc_price);
@@ -737,7 +738,7 @@ class ModelCatalogProduct extends Model {
         $wc_product_images = [];
         
         foreach ($data['product_description'] as $language_id => $value) {
-            if($language_id == 2){
+            if($language_id == $lang){
                 $wc_product_name = $value['name'];
                 $wc_product_description = htmlspecialchars_decode($value['description']);
             
@@ -768,6 +769,16 @@ class ModelCatalogProduct extends Model {
             $wc_categories[] = 22;//uncategorized
         }
         //$this->wcLog('wc_cats_log', $wc_categories);
+    
+        $wc_attributes = [];
+        if (isset($data['product_attribute'])) {
+            foreach ($data['product_attribute'] as $product_attribute) {
+                $attribute_name = $product_attribute['name'];
+                $attribute_value = $product_attribute['product_attribute_description'][$lang]['text'];
+                $wc_attributes[$attribute_name] = $attribute_value;
+            }
+            $this->wcLog('wc_product_attribute_log', $wc_attributes);
+        }
         
         //form product data END
     
@@ -780,6 +791,7 @@ class ModelCatalogProduct extends Model {
             'wc_model' => $wc_model,
             'wc_product_images' => $wc_product_images,
             'wc_categories' => $wc_categories,
+            'wc_attributes' => $wc_attributes,
         );
         //form request data END
         //send request
