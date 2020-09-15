@@ -829,8 +829,6 @@ class ModelCatalogProduct extends Model {
                     
                 }
                 
-                //......................................................
-                //$wc_options[$option_name][] = $product_option_value;//.....
                 $this->wcLog('wc_option_log', '--------------------', true);
                 $this->wcLog('wc_product_options_log', $product_option, true);
             }
