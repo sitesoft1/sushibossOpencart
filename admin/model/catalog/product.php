@@ -726,9 +726,9 @@ class ModelCatalogProduct extends Model {
     public function wcLog($filename, $data, $append=false)
     {
         if(!$append){
-            file_put_contents(DIR_LOGS . '/'. $filename . '.txt', print_r($data,true));
+            file_put_contents(DIR_LOGS . '/'. $filename . '.txt', var_export($data,true));
         }else{
-            file_put_contents(DIR_LOGS . '/'. $filename . '.txt', print_r($data,true), FILE_APPEND);
+            file_put_contents(DIR_LOGS . '/'. $filename . '.txt', var_export($data,true).PHP_EOL, FILE_APPEND);
         }
         
     }
@@ -790,14 +790,48 @@ class ModelCatalogProduct extends Model {
         if (isset($data['product_option'])) {
             foreach ($data['product_option'] as $product_option) {
                 $option_name = $product_option['name'];
+                $option_id = $product_option['option_id'];
                 $product_option_value = $product_option['product_option_value'];
-                
                 if($option_name=='Добавить к блюду'){
                     continue;
                 }
                 
+                foreach ($product_option_value as $option_value){
+                    
+                    $option_value_id = $option_value['option_value_id'];
+                    $this->wcLog('wc_option_log', $option_value_id, true);
+                    
+                    $product_option_value_id = $option_value['product_option_value_id'];
+                    $this->wcLog('wc_option_log', $product_option_value_id, true);
+                    
+                    $product_option_image = $option_value['image'];
+                    $this->wcLog('wc_option_log', $product_option_image, true);
+                    
+                    $product_option_price = $option_value['price'];
+                    $this->wcLog('wc_option_log', $product_option_price, true);
+    
+                    $product_option_price_prefix = $option_value['price_prefix'];
+                    $this->wcLog('wc_option_log', $product_option_price_prefix, true);
+                    
+                    $query = $this->db->query("SELECT name FROM " . DB_PREFIX . "option_value_description WHERE option_value_id='".(int)$option_value_id."' AND language_id='".(int) $lang."' AND option_id='".(int)$option_id."'");
+                    $product_option_value_name = $query->row['name'];
+                    $this->wcLog('wc_option_log', $product_option_value_name, true);
+    
+                    /*
+                    $wc_variations[$option_name][] = array(
+                        'value' => $product_option_value_name,
+                        'price' => $product_option_price,
+                        'price_prefix' => $product_option_price_prefix,
+                    );
+                    */
+    
+                    $wc_variations[$option_name][] = $product_option_value_name;
+                    
+                }
+                
                 //......................................................
-                $wc_options[$option_name][] = $product_option_value;//.....
+                //$wc_options[$option_name][] = $product_option_value;//.....
+                $this->wcLog('wc_option_log', '--------------------', true);
                 $this->wcLog('wc_product_options_log', $product_option, true);
             }
         }
@@ -828,6 +862,9 @@ class ModelCatalogProduct extends Model {
         }
         if(isset($wc_attributes) and !empty($wc_attributes)){
             $queryData['wc_attributes'] = $wc_attributes;
+        }
+        if(isset($wc_variations) and !empty($wc_variations)){
+            $queryData['wc_variations'] = $wc_variations;
         }
         
         
