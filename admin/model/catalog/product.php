@@ -716,16 +716,21 @@ class ModelCatalogProduct extends Model {
             CURLOPT_POSTFIELDS => $queryData,
         ));
     
-        $result = curl_exec($curl);
+        $product_id = curl_exec($curl);
         curl_close($curl);
-        //file_put_contents(DIR_LOGS . '/wc_log.txt', print_r($result,true));
-        $this->wcLog('wc_log', $result);
-        return $result;
+        
+        $this->wcLog('wc_log', $product_id, false);
+        return $product_id;
     }
     
-    public function wcLog($filename, $data)
+    public function wcLog($filename, $data, $append=false)
     {
-        file_put_contents(DIR_LOGS . '/'. $filename . '.txt', print_r($data,true));
+        if(!$append){
+            file_put_contents(DIR_LOGS . '/'. $filename . '.txt', print_r($data,true));
+        }else{
+            file_put_contents(DIR_LOGS . '/'. $filename . '.txt', print_r($data,true), FILE_APPEND);
+        }
+        
     }
     
     public function addProductToWc($data)
@@ -770,6 +775,7 @@ class ModelCatalogProduct extends Model {
         }
         //$this->wcLog('wc_cats_log', $wc_categories);
     
+        //attributes
         $wc_attributes = [];
         if (isset($data['product_attribute'])) {
             foreach ($data['product_attribute'] as $product_attribute) {
@@ -777,22 +783,65 @@ class ModelCatalogProduct extends Model {
                 $attribute_value = $product_attribute['product_attribute_description'][$lang]['text'];
                 $wc_attributes[$attribute_name] = $attribute_value;
             }
-            $this->wcLog('wc_product_attribute_log', $wc_attributes);
+            //$this->wcLog('wc_product_attribute_log', $wc_attributes);
+        }
+        //attributes END
+    
+        if (isset($data['product_option'])) {
+            foreach ($data['product_option'] as $product_option) {
+                $option_name = $product_option['name'];
+                $product_option_value = $product_option['product_option_value'];
+                
+                if($option_name=='Добавить к блюду'){
+                    continue;
+                }
+                
+                //......................................................
+                $wc_options[$option_name][] = $product_option_value;//.....
+                $this->wcLog('wc_product_options_log', $product_option, true);
+            }
         }
         
         //form product data END
     
         //form request data
         $queryUrl = 'https://sushisetboss.com/_oc_import/add_oc_product.php';
+        
+        $queryData = [];
+        if(isset($wc_product_name) and !empty($wc_product_name)){
+            $queryData['wc_product_name'] = $wc_product_name;
+        }
+        if(isset($wc_price) and !empty($wc_price)){
+            $queryData['wc_price'] = $wc_price;
+        }
+        if(isset($wc_product_description) and !empty($wc_product_description)){
+            $queryData['wc_product_description'] = $wc_product_description;
+        }
+        if(isset($wc_model) and !empty($wc_model)){
+            $queryData['wc_model'] = $wc_model;
+        }
+        if(isset($wc_product_images) and !empty($wc_product_images)){
+            $queryData['wc_product_images'] = $wc_product_images;
+        }
+        if(isset($wc_categories) and !empty($wc_categories)){
+            $queryData['wc_categories'] = $wc_categories;
+        }
+        if(isset($wc_attributes) and !empty($wc_attributes)){
+            $queryData['wc_attributes'] = $wc_attributes;
+        }
+        
+        
+        /*
         $queryData = array(
-            'wc_product_name' => $wc_product_name,
-            'wc_price' => $wc_price,
-            'wc_product_description' => $wc_product_description,
-            'wc_model' => $wc_model,
-            'wc_product_images' => $wc_product_images,
-            'wc_categories' => $wc_categories,
-            'wc_attributes' => $wc_attributes,
+            //'wc_product_name' => $wc_product_name,
+            //'wc_price' => $wc_price,
+            //'wc_product_description' => $wc_product_description,
+            //'wc_model' => $wc_model,
+            //'wc_product_images' => $wc_product_images,
+            //'wc_categories' => $wc_categories,
+            //'wc_attributes' => $wc_attributes,
         );
+        */
         //form request data END
         //send request
         $wc_product_id = $this->wcCurl($queryData, $queryUrl);
