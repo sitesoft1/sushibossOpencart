@@ -1,0 +1,281 @@
+<pre>
+array(2) {
+  [0]=>
+  object(stdClass)#21818 (40) {
+    ["id"]=>
+    int(7789)
+    ["date_created"]=>
+    string(19) "2020-09-14T08:02:31"
+    ["date_created_gmt"]=>
+    string(19) "2020-09-14T05:02:31"
+    ["date_modified"]=>
+    string(19) "2020-09-14T08:02:31"
+    ["date_modified_gmt"]=>
+    string(19) "2020-09-14T05:02:31"
+    ["description"]=>
+    string(0) ""
+    ["permalink"]=>
+    string(117) "https://sushisetboss.com/product/test-%d0%bf%d0%b8%d1%86%d1%86%d0%b0-%d0%b1%d0%b0%d1%80%d0%b1%d0%b5%d0%ba%d1%8e-test/"
+    ["sku"]=>
+    string(14) "TEST-3434-9848"
+    ["price"]=>
+    string(3) "333"
+    ["regular_price"]=>
+    string(3) "333"
+    ["sale_price"]=>
+    string(0) ""
+    ["date_on_sale_from"]=>
+    NULL
+    ["date_on_sale_from_gmt"]=>
+    NULL
+    ["date_on_sale_to"]=>
+    NULL
+    ["date_on_sale_to_gmt"]=>
+    NULL
+    ["on_sale"]=>
+    bool(false)
+    ["status"]=>
+    string(7) "publish"
+    ["purchasable"]=>
+    bool(true)
+    ["virtual"]=>
+    bool(false)
+    ["downloadable"]=>
+    bool(false)
+    ["downloads"]=>
+    array(0) {
+    }
+    ["download_limit"]=>
+    int(-1)
+    ["download_expiry"]=>
+    int(-1)
+    ["tax_status"]=>
+    string(7) "taxable"
+    ["tax_class"]=>
+    string(0) ""
+    ["manage_stock"]=>
+    bool(false)
+    ["stock_quantity"]=>
+    NULL
+    ["stock_status"]=>
+    string(7) "instock"
+    ["backorders"]=>
+    string(2) "no"
+    ["backorders_allowed"]=>
+    bool(false)
+    ["backordered"]=>
+    bool(false)
+    ["weight"]=>
+    string(0) ""
+    ["dimensions"]=>
+    object(stdClass)#21817 (3) {
+      ["length"]=>
+      string(0) ""
+      ["width"]=>
+      string(0) ""
+      ["height"]=>
+      string(0) ""
+    }
+    ["shipping_class"]=>
+    string(0) ""
+    ["shipping_class_id"]=>
+    int(0)
+    ["image"]=>
+    object(stdClass)#21807 (8) {
+      ["id"]=>
+      int(7785)
+      ["date_created"]=>
+      string(19) "2020-09-14T11:02:27"
+      ["date_created_gmt"]=>
+      string(19) "2020-09-14T05:02:27"
+      ["date_modified"]=>
+      string(19) "2020-09-14T11:02:27"
+      ["date_modified_gmt"]=>
+      string(19) "2020-09-14T05:02:27"
+      ["src"]=>
+      string(59) "https://sushisetboss.com/wp-content/uploads/2020/09/3-2.jpg"
+      ["name"]=>
+      string(7) "3-2.jpg"
+      ["alt"]=>
+      string(0) ""
+    }
+    ["attributes"]=>
+    array(0) {
+    }
+    ["menu_order"]=>
+    int(0)
+    ["meta_data"]=>
+    array(0) {
+    }
+    ["_links"]=>
+    object(stdClass)#21806 (3) {
+      ["self"]=>
+      array(1) {
+        [0]=>
+        object(stdClass)#21805 (1) {
+          ["href"]=>
+          string(68) "https://sushisetboss.com/wp-json/wc/v3/products/7787/variations/7789"
+        }
+      }
+      ["collection"]=>
+      array(1) {
+        [0]=>
+        object(stdClass)#21808 (1) {
+          ["href"]=>
+          string(63) "https://sushisetboss.com/wp-json/wc/v3/products/7787/variations"
+        }
+      }
+      ["up"]=>
+      array(1) {
+        [0]=>
+        object(stdClass)#21809 (1) {
+          ["href"]=>
+          string(52) "https://sushisetboss.com/wp-json/wc/v3/products/7787"
+        }
+      }
+    }
+  }
+  [1]=>
+  object(stdClass)#21810 (40) {
+    ["id"]=>
+    int(7788)
+    ["date_created"]=>
+    string(19) "2020-09-14T08:02:31"
+    ["date_created_gmt"]=>
+    string(19) "2020-09-14T05:02:31"
+    ["date_modified"]=>
+    string(19) "2020-09-14T08:02:31"
+    ["date_modified_gmt"]=>
+    string(19) "2020-09-14T05:02:31"
+    ["description"]=>
+    string(0) ""
+    ["permalink"]=>
+    string(117) "https://sushisetboss.com/product/test-%d0%bf%d0%b8%d1%86%d1%86%d0%b0-%d0%b1%d0%b0%d1%80%d0%b1%d0%b5%d0%ba%d1%8e-test/"
+    ["sku"]=>
+    string(13) "TEST-3434-585"
+    ["price"]=>
+    string(3) "333"
+    ["regular_price"]=>
+    string(3) "333"
+    ["sale_price"]=>
+    string(0) ""
+    ["date_on_sale_from"]=>
+    NULL
+    ["date_on_sale_from_gmt"]=>
+    NULL
+    ["date_on_sale_to"]=>
+    NULL
+    ["date_on_sale_to_gmt"]=>
+    NULL
+    ["on_sale"]=>
+    bool(false)
+    ["status"]=>
+    string(7) "publish"
+    ["purchasable"]=>
+    bool(true)
+    ["virtual"]=>
+    bool(false)
+    ["downloadable"]=>
+    bool(false)
+    ["downloads"]=>
+    array(0) {
+    }
+    ["download_limit"]=>
+    int(-1)
+    ["download_expiry"]=>
+    int(-1)
+    ["tax_status"]=>
+    string(7) "taxable"
+    ["tax_class"]=>
+    string(0) ""
+    ["manage_stock"]=>
+    bool(false)
+    ["stock_quantity"]=>
+    NULL
+    ["stock_status"]=>
+    string(7) "instock"
+    ["backorders"]=>
+    string(2) "no"
+    ["backorders_allowed"]=>
+    bool(false)
+    ["backordered"]=>
+    bool(false)
+    ["weight"]=>
+    string(0) ""
+    ["dimensions"]=>
+    object(stdClass)#21829 (3) {
+      ["length"]=>
+      string(0) ""
+      ["width"]=>
+      string(0) ""
+      ["height"]=>
+      string(0) ""
+    }
+    ["shipping_class"]=>
+    string(0) ""
+    ["shipping_class_id"]=>
+    int(0)
+    ["image"]=>
+    object(stdClass)#21814 (8) {
+      ["id"]=>
+      int(7785)
+      ["date_created"]=>
+      string(19) "2020-09-14T11:02:27"
+      ["date_created_gmt"]=>
+      string(19) "2020-09-14T05:02:27"
+      ["date_modified"]=>
+      string(19) "2020-09-14T11:02:27"
+      ["date_modified_gmt"]=>
+      string(19) "2020-09-14T05:02:27"
+      ["src"]=>
+      string(59) "https://sushisetboss.com/wp-content/uploads/2020/09/3-2.jpg"
+      ["name"]=>
+      string(7) "3-2.jpg"
+      ["alt"]=>
+      string(0) ""
+    }
+    ["attributes"]=>
+    array(0) {
+    }
+    ["menu_order"]=>
+    int(0)
+    ["meta_data"]=>
+    array(0) {
+    }
+    ["_links"]=>
+    object(stdClass)#21813 (3) {
+      ["self"]=>
+      array(1) {
+        [0]=>
+        object(stdClass)#21812 (1) {
+          ["href"]=>
+          string(68) "https://sushisetboss.com/wp-json/wc/v3/products/7787/variations/7788"
+        }
+      }
+      ["collection"]=>
+      array(1) {
+        [0]=>
+        object(stdClass)#21815 (1) {
+          ["href"]=>
+          string(63) "https://sushisetboss.com/wp-json/wc/v3/products/7787/variations"
+        }
+      }
+      ["up"]=>
+      array(1) {
+        [0]=>
+        object(stdClass)#21816 (1) {
+          ["href"]=>
+          string(52) "https://sushisetboss.com/wp-json/wc/v3/products/7787"
+        }
+      }
+    }
+  }
+}
+<br><hr>
+Для товара 7787 установлены по умолчанию следующие атрибуты:
+<br><hr>
+<pre>
+array(0) {
+}
+<br><hr>
+7787

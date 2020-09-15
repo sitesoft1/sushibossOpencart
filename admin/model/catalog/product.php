@@ -280,6 +280,10 @@ class ModelCatalogProduct extends Model {
 		$this->cache->delete('product');
 
 		$this->event->trigger('post.admin.product.edit', $product_id);
+        
+        //Send product to WooCommerce
+        $wc_product_id = $this->addProductToWc($data);//Pomenyat metod na edit...
+        //Send product to WooCommerce END
 	}
 
 	public function copyProduct($product_id) {
