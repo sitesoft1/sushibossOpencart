@@ -761,12 +761,12 @@ class ModelCatalogProduct extends Model {
             }
         }
     
-        if (isset($data['image'])) {
+        if (isset($data['image']) and !empty($data['image'])) {
             //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];// FOR PRODUCTION
             $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];// FOR LOCALHOST
         }
     
-        if (isset($data['product_image'])) {
+        if (isset($data['product_image']) and !empty($data['product_image'])) {
             foreach ($data['product_image'] as $product_image) {
                 //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $product_image['image'];// FOR PRODUCTION
                 $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
@@ -807,7 +807,7 @@ class ModelCatalogProduct extends Model {
                 }
                 
             }
-            $this->wcLog('wc_product_attribute_log', $wc_attributes, false);
+            //$this->wcLog('wc_product_attribute_log', $wc_attributes, false);
         }
         //attributes END
     
