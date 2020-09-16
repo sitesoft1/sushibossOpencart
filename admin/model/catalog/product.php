@@ -318,6 +318,11 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function deleteProduct($product_id) {
+	    
+	    //wc
+        $this->deleteWcProduct($product_id);
+	    //wc end
+	    
 		$this->event->trigger('pre.admin.product.delete', $product_id);
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
@@ -343,6 +348,7 @@ class ModelCatalogProduct extends Model {
 		$this->cache->delete('product');
 
 		$this->event->trigger('post.admin.product.delete', $product_id);
+		
 	}
 
 	public function getProduct($product_id) {
@@ -886,6 +892,22 @@ class ModelCatalogProduct extends Model {
         }
         
         return $wc_product_id;
+    }
+    
+    public function deleteWcProduct($product_id)
+    {
+        $queryUrl = 'https://sushisetboss.com/_oc_import/del_oc_product.php';
+        $queryData = [];
+        $query = $this->db->query("SELECT mpn FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
+        $wc_product_id = $query->row['mpn'];
+        
+        if(isset($wc_product_id) and !empty($wc_product_id) and is_numeric($wc_product_id)){
+            $queryData['wc_product_id'] = $wc_product_id;
+            $result = $this->wcCurl($queryData, $queryUrl);
+            $this->wcLog('wc_delete_log', $result, false);
+            return $result;
+        }
+        
     }
 	//wc END #################################################
 }
