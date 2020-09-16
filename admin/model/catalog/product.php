@@ -730,7 +730,7 @@ class ModelCatalogProduct extends Model {
         $product_id = curl_exec($curl);
         curl_close($curl);
         
-        $this->wcLog('wc_log', $product_id, false);
+        //$this->wcLog('wc_log', $product_id, false);
         return $product_id;
     }
     
@@ -922,7 +922,7 @@ class ModelCatalogProduct extends Model {
         if(isset($wc_product_id) and !empty($wc_product_id) and is_numeric($wc_product_id)){
             $queryData['wc_product_id'] = $wc_product_id;
             $result = $this->wcCurl($queryData, $queryUrl);
-            $this->wcLog('wc_delete_log', $result, false);
+            //$this->wcLog('wc_delete_log', $result, false);
             return $result;
         }
         
