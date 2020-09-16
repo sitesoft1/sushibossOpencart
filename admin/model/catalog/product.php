@@ -799,38 +799,36 @@ class ModelCatalogProduct extends Model {
                 foreach ($product_option_value as $option_value){
                     
                     $option_value_id = $option_value['option_value_id'];
-                    $this->wcLog('wc_option_log', $option_value_id, true);
+                    //$this->wcLog('wc_option_log', $option_value_id, true);
                     
                     $product_option_value_id = $option_value['product_option_value_id'];
-                    $this->wcLog('wc_option_log', $product_option_value_id, true);
+                    //$this->wcLog('wc_option_log', $product_option_value_id, true);
                     
                     $product_option_image = $option_value['image'];
-                    $this->wcLog('wc_option_log', $product_option_image, true);
+                    //$this->wcLog('wc_option_log', $product_option_image, true);
                     
                     $product_option_price = $option_value['price'];
-                    $this->wcLog('wc_option_log', $product_option_price, true);
+                    //$this->wcLog('wc_option_log', $product_option_price, true);
     
                     $product_option_price_prefix = $option_value['price_prefix'];
-                    $this->wcLog('wc_option_log', $product_option_price_prefix, true);
+                    //$this->wcLog('wc_option_log', $product_option_price_prefix, true);
                     
                     $query = $this->db->query("SELECT name FROM " . DB_PREFIX . "option_value_description WHERE option_value_id='".(int)$option_value_id."' AND language_id='".(int) $lang."' AND option_id='".(int)$option_id."'");
                     $product_option_value_name = $query->row['name'];
-                    $this->wcLog('wc_option_log', $product_option_value_name, true);
+                    //$this->wcLog('wc_option_log', $product_option_value_name, true);
     
-                    /*
-                    $wc_variations[$option_name][] = array(
+                    
+                    $wc_form_variations[$option_name][] = array(
                         'value' => $product_option_value_name,
                         'price' => $product_option_price,
                         'price_prefix' => $product_option_price_prefix,
                     );
-                    */
-    
-                    $wc_variations[$option_name][] = $product_option_value_name;
                     
+                    $wc_variations[$option_name][] = $product_option_value_name;
                 }
                 
-                $this->wcLog('wc_option_log', '--------------------', true);
-                $this->wcLog('wc_product_options_log', $product_option, true);
+                //$this->wcLog('wc_option_log', '--------------------', true);
+                //$this->wcLog('wc_product_options_log', $product_option, true);
             }
         }
         
@@ -863,6 +861,9 @@ class ModelCatalogProduct extends Model {
         }
         if(isset($wc_variations) and !empty($wc_variations)){
             $queryData['wc_variations'] = $wc_variations;
+        }
+        if(isset($wc_form_variations) and !empty($wc_form_variations)){
+            $queryData['wc_form_variations'] = $wc_form_variations;
         }
         
         
