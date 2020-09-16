@@ -789,12 +789,25 @@ class ModelCatalogProduct extends Model {
         //attributes
         $wc_attributes = [];
         if (isset($data['product_attribute'])) {
+            //$this->wcLog('data_product_attribute_log', $data['product_attribute'], false);
+            
             foreach ($data['product_attribute'] as $product_attribute) {
-                $attribute_name = $product_attribute['name'];
+                //$this->wcLog('product_attribute_log', $product_attribute, true);
+                $attribute_id = $product_attribute['attribute_id'];
+                if(isset($product_attribute['name']) and !empty($product_attribute['name'])){
+                    $attribute_name = $product_attribute['name'];
+                }else{
+                    $query = $this->db->query("SELECT name FROM " . DB_PREFIX . "attribute_description WHERE attribute_id = '" . (int)$attribute_id . "' AND language_id='".(int)$lang."'");
+                    $attribute_name = $query->row['name'];
+                }
+                
                 $attribute_value = $product_attribute['product_attribute_description'][$lang]['text'];
-                $wc_attributes[$attribute_name] = $attribute_value;
+                if(isset($attribute_value) and !empty($attribute_value)){
+                    $wc_attributes[$attribute_name] = $attribute_value;
+                }
+                
             }
-            //$this->wcLog('wc_product_attribute_log', $wc_attributes);
+            $this->wcLog('wc_product_attribute_log', $wc_attributes, false);
         }
         //attributes END
     
