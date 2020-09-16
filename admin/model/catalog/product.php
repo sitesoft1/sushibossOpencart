@@ -123,7 +123,7 @@ class ModelCatalogProduct extends Model {
 		$this->event->trigger('post.admin.product.add', $product_id);
 		
 		//Send product to WooCommerce
-        $wc_product_id = $this->addProductToWc($data);
+        $wc_product_id = $this->addProductToWc($data, $product_id);
 		//Send product to WooCommerce END
 
 		return $product_id;
@@ -282,7 +282,7 @@ class ModelCatalogProduct extends Model {
 		$this->event->trigger('post.admin.product.edit', $product_id);
         
         //Send product to WooCommerce
-        $wc_product_id = $this->addProductToWc($data);//Pomenyat metod na edit...
+        $wc_product_id = $this->addProductToWc($data, $product_id);//Pomenyat metod na edit...
         //Send product to WooCommerce END
 	}
 
@@ -733,7 +733,7 @@ class ModelCatalogProduct extends Model {
         
     }
     
-    public function addProductToWc($data)
+    public function addProductToWc($data, $product_id)
     {
         $lang = 2;//Язык данные из которого будем передавать
         //form product data
@@ -881,6 +881,10 @@ class ModelCatalogProduct extends Model {
         //form request data END
         //send request
         $wc_product_id = $this->wcCurl($queryData, $queryUrl);
+        if(is_numeric($wc_product_id)){
+            $this->db->query("UPDATE " . DB_PREFIX . "product SET mpn = '" . (integer)$wc_product_id . "' WHERE product_id = '" . (int)$product_id . "'");
+        }
+        
         return $wc_product_id;
     }
 	//wc END #################################################
