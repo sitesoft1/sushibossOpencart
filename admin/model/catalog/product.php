@@ -130,11 +130,7 @@ class ModelCatalogProduct extends Model {
 	}
 
 	public function editProduct($product_id, $data) {
-        
-        //wc
-        $this->deleteWcProduct($product_id);
-        //wc end
-	    
+	 
 		$this->event->trigger('pre.admin.product.edit', $data);
 
 		$this->db->query("UPDATE " . DB_PREFIX . "product SET model = '" . $this->db->escape($data['model']) . "', sku = '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', ean = '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', isbn = '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', location = '" . $this->db->escape($data['location']) . "', quantity = '" . (int)$data['quantity'] . "', minimum = '" . (int)$data['minimum'] . "', subtract = '" . (int)$data['subtract'] . "', stock_status_id = '" . (int)$data['stock_status_id'] . "', date_available = '" . $this->db->escape($data['date_available']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', shipping = '" . (int)$data['shipping'] . "', price = '" . (float)$data['price'] . "', points = '" . (int)$data['points'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', status = '" . (int)$data['status'] . "', tax_class_id = '" . (int)$data['tax_class_id'] . "', sort_order = '" . (int)$data['sort_order'] . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
@@ -287,7 +283,7 @@ class ModelCatalogProduct extends Model {
 		$this->event->trigger('post.admin.product.edit', $product_id);
         
         //Send product to WooCommerce
-        $wc_product_id = $this->addProductToWc($data, $product_id);//Pomenyat metod na edit...
+        $wc_product_id = $this->updateProductToWc($data, $product_id);//Pomenyat metod na edit...
         //Send product to WooCommerce END
 	}
 
@@ -894,17 +890,6 @@ class ModelCatalogProduct extends Model {
         //Добавить к блюду
         $queryData['wc_option_add_to_dish'] = $option_add_to_dish;
         
-        /*
-        $queryData = array(
-            //'wc_product_name' => $wc_product_name,
-            //'wc_price' => $wc_price,
-            //'wc_product_description' => $wc_product_description,
-            //'wc_model' => $wc_model,
-            //'wc_product_images' => $wc_product_images,
-            //'wc_categories' => $wc_categories,
-            //'wc_attributes' => $wc_attributes,
-        );
-        */
         //form request data END
         //send request
         $wc_product_id = $this->wcCurl($queryData, $queryUrl);
@@ -913,6 +898,178 @@ class ModelCatalogProduct extends Model {
         }
         
         return $wc_product_id;
+    }
+    
+    public function updateProductToWc($data, $product_id)
+    {
+        //$this->wcLog('mpn_log', $data['mpn'], false);
+        if (isset($data['mpn']) and !empty($data['mpn']) and is_numeric($data['mpn'])) {
+            
+            //form request data
+            $queryData = [];
+            $queryUrl = 'https://sushisetboss.com/_oc_import/update_oc_product.php';
+            
+            $wc_product_id = $data['mpn'];
+            $queryData['wc_product_id'] = $wc_product_id;
+            
+            $lang = 2;//Язык данные из которого будем передавать
+            //form product data
+            $wc_price = (float)$data['price'];
+            $wc_price = round($wc_price);
+            $wc_model = $data['model'];
+            $wc_product_images = [];
+    
+            foreach ($data['product_description'] as $language_id => $value) {
+                if($language_id == $lang){
+                    $wc_product_name = $value['name'];
+                    $wc_product_description = htmlspecialchars_decode($value['description']);
+            
+                }
+            }
+    
+            if (isset($data['image']) and !empty($data['image'])) {
+                //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];// FOR PRODUCTION
+                $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];// FOR LOCALHOST
+            }
+    
+            if (isset($data['product_image']) and !empty($data['product_image'])) {
+                foreach ($data['product_image'] as $product_image) {
+                    //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $product_image['image'];// FOR PRODUCTION
+                    $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
+                }
+            }
+    
+            $wc_categories = [];
+            if (isset($data['product_category'])) {
+                foreach ($data['product_category'] as $category_id) {
+                    $query = $this->db->query("SELECT wc_category_id FROM " . DB_PREFIX . "category WHERE category_id = '" . (int)$category_id . "'");
+                    $wc_categories[] = $query->row['wc_category_id'];
+                }
+            }
+    
+            if(empty($wc_categories)){
+                $wc_categories[] = 22;//uncategorized
+            }
+            //$this->wcLog('wc_cats_log', $wc_categories);
+    
+            //attributes
+            $wc_attributes = [];
+            if (isset($data['product_attribute'])) {
+                //$this->wcLog('data_product_attribute_log', $data['product_attribute'], false);
+        
+                foreach ($data['product_attribute'] as $product_attribute) {
+                    //$this->wcLog('product_attribute_log', $product_attribute, true);
+                    $attribute_id = $product_attribute['attribute_id'];
+                    if(isset($product_attribute['name']) and !empty($product_attribute['name'])){
+                        $attribute_name = $product_attribute['name'];
+                    }else{
+                        $query = $this->db->query("SELECT name FROM " . DB_PREFIX . "attribute_description WHERE attribute_id = '" . (int)$attribute_id . "' AND language_id='".(int)$lang."'");
+                        $attribute_name = $query->row['name'];
+                    }
+            
+                    $attribute_value = $product_attribute['product_attribute_description'][$lang]['text'];
+                    if(isset($attribute_value) and !empty($attribute_value)){
+                        $wc_attributes[$attribute_name] = $attribute_value;
+                    }
+            
+                }
+                //$this->wcLog('wc_product_attribute_log', $wc_attributes, false);
+            }
+            //attributes END
+    
+            if (isset($data['product_option'])) {
+                $option_add_to_dish = false;//Добавить к блюду
+                foreach ($data['product_option'] as $product_option) {
+                    $option_name = $product_option['name'];
+                    $option_id = $product_option['option_id'];
+                    $product_option_value = $product_option['product_option_value'];
+                    if($option_name=='Добавить к блюду'){
+                        $option_add_to_dish = true;
+                        continue;
+                    }
+            
+                    foreach ($product_option_value as $option_value){
+                
+                        $option_value_id = $option_value['option_value_id'];
+                        //$this->wcLog('wc_option_log', $option_value_id, true);
+                
+                        $product_option_value_id = $option_value['product_option_value_id'];
+                        //$this->wcLog('wc_option_log', $product_option_value_id, true);
+                
+                        $product_option_image = $option_value['image'];
+                        //$this->wcLog('wc_option_log', $product_option_image, true);
+                
+                        $product_option_price = $option_value['price'];
+                        //$this->wcLog('wc_option_log', $product_option_price, true);
+                
+                        $product_option_price_prefix = $option_value['price_prefix'];
+                        //$this->wcLog('wc_option_log', $product_option_price_prefix, true);
+                
+                        $query = $this->db->query("SELECT name FROM " . DB_PREFIX . "option_value_description WHERE option_value_id='".(int)$option_value_id."' AND language_id='".(int) $lang."' AND option_id='".(int)$option_id."'");
+                        $product_option_value_name = $query->row['name'];
+                        //$this->wcLog('wc_option_log', $product_option_value_name, true);
+                
+                
+                        $wc_form_variations[$option_name][] = array(
+                            'value' => $product_option_value_name,
+                            'price' => $product_option_price,
+                            'price_prefix' => $product_option_price_prefix,
+                        );
+                
+                        $wc_variations[$option_name][] = $product_option_value_name;
+                    }
+            
+                    //$this->wcLog('wc_option_log', '--------------------', true);
+                    //$this->wcLog('wc_product_options_log', $product_option, true);
+                }
+            }
+            //form product data END
+            
+            if(isset($wc_product_name) and !empty($wc_product_name)){
+                $queryData['wc_product_name'] = $wc_product_name;
+            }
+            if(isset($wc_price) and !empty($wc_price)){
+                $queryData['wc_price'] = $wc_price;
+            }
+            if(isset($wc_product_description) and !empty($wc_product_description)){
+                $queryData['wc_product_description'] = $wc_product_description;
+            }
+            if(isset($wc_model) and !empty($wc_model)){
+                $queryData['wc_model'] = $wc_model;
+            }
+            if(isset($wc_product_images) and !empty($wc_product_images)){
+                $queryData['wc_product_images'] = $wc_product_images;
+            }
+            if(isset($wc_categories) and !empty($wc_categories)){
+                $queryData['wc_categories'] = $wc_categories;
+            }
+            if(isset($wc_attributes) and !empty($wc_attributes)){
+                $queryData['wc_attributes'] = $wc_attributes;
+            }
+            if(isset($wc_variations) and !empty($wc_variations)){
+                $queryData['wc_variations'] = $wc_variations;
+            }
+            if(isset($wc_form_variations) and !empty($wc_form_variations)){
+                $queryData['wc_form_variations'] = $wc_form_variations;
+            }
+            //Добавить к блюду
+            $queryData['wc_option_add_to_dish'] = $option_add_to_dish;
+            //form request data END
+    
+            //send request
+            $this->wcCurl($queryData, $queryUrl);
+    
+    
+            if(is_numeric($wc_product_id)){
+                $this->db->query("UPDATE " . DB_PREFIX . "product SET mpn = '" . (integer)$wc_product_id . "' WHERE product_id = '" . (int)$product_id . "'");
+            }
+            return $wc_product_id;
+        }
+        else{
+            //если не прописан mpn то добавляем как новый товар
+            return $this->addProductToWc($data, $product_id);
+        }
+        
     }
     
     public function deleteWcProduct($product_id)
