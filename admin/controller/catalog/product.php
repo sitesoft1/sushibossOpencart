@@ -11,6 +11,18 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->getList();
 	}
+	
+	public function test()
+    {
+        $this->load->language('catalog/product');
+        $this->document->setTitle($this->language->get('heading_title'));
+        $this->load->model('catalog/product');
+    
+        if(($this->request->server['REQUEST_METHOD'] == 'POST')) {
+            file_put_contents(DIR_LOGS.'test_get_in_controller.txt', print_r($this->request->post, true));
+            //$this->model_catalog_product->test($this->request->post);
+        }
+    }
 
 	public function add() {
 		$this->load->language('catalog/product');

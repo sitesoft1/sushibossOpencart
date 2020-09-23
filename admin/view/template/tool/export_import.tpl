@@ -28,11 +28,11 @@
                 <?php var_dump($wc_products_arr); ?>
                 <script>
                     $.ajax({
-                        //url: 'index.php?route=tool/export_import/getCountProduct&token=<?php //echo $token; ?>',
-                        url: 'test/test.php',
+                        url: 'index.php?route=catalog/product/test&token=<?php echo $token; ?>',
+                        //url: 'test/test.php',
                         type: 'post',
-                        //dataType: 'json',
-                        data: '<?php echo json_encode($wc_products_arr, true); ?>',
+                        data: {wc_products_arr:'<?php echo serialize($wc_products_arr); ?>'},
+                        //data: {wc_products_arr:'<?php //echo json_encode($wc_products_arr); ?>'},
                     });
                 </script>
             <?php } ?>
