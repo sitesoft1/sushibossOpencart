@@ -72,6 +72,10 @@ class ModelToolExportImport extends Model {
 	protected $null_array = array();
 	protected $use_table_seo_url = false;
 	protected $posted_categories = '';
+	
+	//wc
+	public $wc_products_arr = array();
+	//wc END
 
 
 	public function __construct( $registry ) {
@@ -974,6 +978,11 @@ class ModelToolExportImport extends Model {
 	protected function storeProductIntoDatabase( &$product, &$languages, &$product_fields, $exist_table_product_tag, $exist_meta_title, &$layout_ids, &$available_store_ids, &$manufacturers, &$weight_class_ids, &$length_class_ids, &$url_alias_ids ) {
 		// extract the product details
 		$product_id = $product['product_id'];
+		
+		//wc
+		$this->wc_products_arr[] = $product_id;
+		//wc END
+		
 		$names = $product['names'];
 		$categories = $product['categories'];
 		$quantity = $product['quantity'];
@@ -6150,7 +6159,13 @@ class ModelToolExportImport extends Model {
 			$this->uploadFilters( $reader, $incremental );
 			$this->uploadCustomers( $reader, $incremental, $available_customer_ids );
 			$this->uploadAddresses( $reader, $incremental, $available_customer_ids );
-			return true;
+			//return true;
+			if(!empty($this->wc_products_arr)){
+				return $this->wc_products_arr;
+			}else{
+				return true;
+			}
+			
 		} catch (Exception $e) {
 			$errstr = $e->getMessage();
 			$errline = $e->getLine();

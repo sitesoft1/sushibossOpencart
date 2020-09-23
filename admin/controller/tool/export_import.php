@@ -25,10 +25,14 @@ class ControllerToolExportImport extends Controller {
 			if ((isset( $this->request->files['upload'] )) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
 				$file = $this->request->files['upload']['tmp_name'];
 				$incremental = ($this->request->post['incremental']) ? true : false;
-				if ($this->model_tool_export_import->upload($file,$this->request->post['incremental'])==true) {
+				//wc
+                $wc_products_arr = $this->model_tool_export_import->upload($file,$this->request->post['incremental']);
+				if ($wc_products_arr) {
 					$this->session->data['success'] = $this->language->get('text_success');
+					$this->session->data['wc_products_arr'] = $wc_products_arr;
 					$this->response->redirect($this->url->link('tool/export_import', 'token=' . $this->session->data['token'], $this->ssl));
 				}
+				//wc END
 				else {
 					$this->error['warning'] = $this->language->get('error_upload');
 					if (defined('VERSION')) {
@@ -225,8 +229,11 @@ class ControllerToolExportImport extends Controller {
 
 		if (isset($this->session->data['success'])) {
 			$data['success'] = $this->session->data['success'];
+			//wc
+			$data['wc_products_arr'] = $this->session->data['wc_products_arr'];
 		
 			unset($this->session->data['success']);
+			unset($this->session->data['wc_products_arr']);//wc
 		} else {
 			$data['success'] = '';
 		}

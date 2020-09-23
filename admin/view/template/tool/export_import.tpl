@@ -23,6 +23,20 @@
 		<div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 		</div>
+            <!-- wc -->
+            <?php if (!empty($wc_products_arr)) { ?>
+                <?php var_dump($wc_products_arr); ?>
+                <script>
+                    $.ajax({
+                        //url: 'index.php?route=tool/export_import/getCountProduct&token=<?php //echo $token; ?>',
+                        url: 'test/test.php',
+                        type: 'post',
+                        //dataType: 'json',
+                        data: '<?php echo json_encode($wc_products_arr, true); ?>',
+                    });
+                </script>
+            <?php } ?>
+            <!-- wc END -->
 		<?php } ?>
 		<?php if ((!$error_warning) && (!$success)) { ?>
 		<div id="export_import_notification" class="alert alert-info"><i class="fa fa-info-circle"></i>
