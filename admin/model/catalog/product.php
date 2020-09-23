@@ -730,7 +730,7 @@ class ModelCatalogProduct extends Model {
         $product_id = curl_exec($curl);
         curl_close($curl);
         
-        //$this->wcLog('wc_log', $product_id, false);
+        $this->wcLog('wc_log', $product_id, false);
         return $product_id;
     }
     
@@ -812,11 +812,13 @@ class ModelCatalogProduct extends Model {
         //attributes END
     
         if (isset($data['product_option'])) {
+            $option_add_to_dish = false;//Добавить к блюду
             foreach ($data['product_option'] as $product_option) {
                 $option_name = $product_option['name'];
                 $option_id = $product_option['option_id'];
                 $product_option_value = $product_option['product_option_value'];
                 if($option_name=='Добавить к блюду'){
+                    $option_add_to_dish = true;
                     continue;
                 }
                 
@@ -889,7 +891,8 @@ class ModelCatalogProduct extends Model {
         if(isset($wc_form_variations) and !empty($wc_form_variations)){
             $queryData['wc_form_variations'] = $wc_form_variations;
         }
-        
+        //Добавить к блюду
+        $queryData['wc_option_add_to_dish'] = $option_add_to_dish;
         
         /*
         $queryData = array(
