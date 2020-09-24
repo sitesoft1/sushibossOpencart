@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 class ModelCatalogProduct extends Model {
 	public function addProduct($data) {
 		$this->event->trigger('pre.admin.product.add', $data);
@@ -122,9 +123,17 @@ class ModelCatalogProduct extends Model {
 
 		$this->event->trigger('post.admin.product.add', $product_id);
 		
-		//Send product to WooCommerce
-        $wc_product_id = $this->addProductToWc($data, $product_id);
-		//Send product to WooCommerce END
+		
+        try {
+            //Send product to WooCommerce
+            $wc_product_id = $this->addProductToWc($data, $product_id);
+            //Send product to WooCommerce END
+        }
+        catch(Exception $e){
+            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $err = $info . $e->getMessage();
+            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+        }
 
 		return $product_id;
 	}
@@ -283,7 +292,14 @@ class ModelCatalogProduct extends Model {
 		$this->event->trigger('post.admin.product.edit', $product_id);
         
         //Send product to WooCommerce
-        $wc_product_id = $this->updateProductToWc($data, $product_id);//Pomenyat metod na edit...
+        try {
+            $wc_product_id = $this->updateProductToWc($data, $product_id);//Pomenyat metod na edit...
+        }
+        catch(Exception $e){
+            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $err = $info . $e->getMessage();
+            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+        }
         //Send product to WooCommerce END
 	}
 
@@ -349,7 +365,16 @@ class ModelCatalogProduct extends Model {
         $wc_products_arr = json_decode($data['wc_products_arr']);
         foreach ($wc_products_arr as $product_id){
             $product_data = $this->copyWcProduct($product_id);
-            $this->editProduct($product_id, $product_data);
+            
+            try {
+                $this->editProduct($product_id, $product_data);
+            }
+            catch(Exception $e){
+                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $err = $info . $e->getMessage();
+                $this->wcLog('wcImport_err_log', $err, false);
+            }
+            
             $this->wcLog($product_id, $product_data, false);
         }
     }
@@ -357,9 +382,16 @@ class ModelCatalogProduct extends Model {
 
 	public function deleteProduct($product_id) {
 	    
-	    //wc
-        $this->deleteWcProduct($product_id);
-	    //wc end
+        try {
+            //wc
+            $this->deleteWcProduct($product_id);
+            //wc end
+        }
+        catch(Exception $e){
+            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $err = $info . $e->getMessage();
+            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+        }
 	    
 		$this->event->trigger('pre.admin.product.delete', $product_id);
 
@@ -760,7 +792,15 @@ class ModelCatalogProduct extends Model {
             CURLOPT_POSTFIELDS => $queryData,
         ));
     
-        $product_id = curl_exec($curl);
+        try {
+            $product_id = curl_exec($curl);
+        }
+        catch(Exception $e){
+            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $err = $info . $e->getMessage();
+            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+        }
+        
         curl_close($curl);
         
         $this->wcLog('wc_log', $product_id, false);
@@ -927,9 +967,18 @@ class ModelCatalogProduct extends Model {
         //Добавить к блюду
         $queryData['wc_option_add_to_dish'] = $option_add_to_dish;
         
-        //form request data END
-        //send request
-        $wc_product_id = $this->wcCurl($queryData, $queryUrl);
+        
+        try {
+            //form request data END
+            //send request
+            $wc_product_id = $this->wcCurl($queryData, $queryUrl);
+        }
+        catch(Exception $e){
+            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $err = $info . $e->getMessage();
+            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+        }
+        
         if(is_numeric($wc_product_id)){
             $this->db->query("UPDATE " . DB_PREFIX . "product SET mpn = '" . (integer)$wc_product_id . "' WHERE product_id = '" . (int)$product_id . "'");
         }
@@ -1093,18 +1142,32 @@ class ModelCatalogProduct extends Model {
             $queryData['wc_option_add_to_dish'] = $option_add_to_dish;
             //form request data END
     
-            //send request
-            $this->wcCurl($queryData, $queryUrl);
-    
-    
+            try {
+                //send request
+                $this->wcCurl($queryData, $queryUrl);
+            }
+            catch(Exception $e){
+                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $err = $info . $e->getMessage();
+                $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            }
+            
             if(is_numeric($wc_product_id)){
                 $this->db->query("UPDATE " . DB_PREFIX . "product SET mpn = '" . (integer)$wc_product_id . "' WHERE product_id = '" . (int)$product_id . "'");
             }
             return $wc_product_id;
         }
         else{
-            //если не прописан mpn то добавляем как новый товар
-            return $this->addProductToWc($data, $product_id);
+            
+            try {
+                //если не прописан mpn то добавляем как новый товар
+                return $this->addProductToWc($data, $product_id);
+            }
+            catch(Exception $e){
+                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $err = $info . $e->getMessage();
+                $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            }
         }
         
     }
@@ -1118,7 +1181,14 @@ class ModelCatalogProduct extends Model {
         
         if(isset($wc_product_id) and !empty($wc_product_id) and is_numeric($wc_product_id)){
             $queryData['wc_product_id'] = $wc_product_id;
-            $result = $this->wcCurl($queryData, $queryUrl);
+            try {
+                $result = $this->wcCurl($queryData, $queryUrl);
+            }
+            catch(Exception $e){
+                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $err = $info . $e->getMessage();
+                $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            }
             //$this->wcLog('wc_delete_log', $result, false);
             return $result;
         }
