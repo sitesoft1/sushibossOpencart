@@ -130,9 +130,9 @@ class ModelCatalogProduct extends Model {
             //Send product to WooCommerce END
         }
         catch(Exception $e){
-            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
             $err = $info . $e->getMessage();
-            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
         }
 
 		return $product_id;
@@ -296,9 +296,9 @@ class ModelCatalogProduct extends Model {
             $wc_product_id = $this->updateProductToWc($data, $product_id);//Pomenyat metod na edit...
         }
         catch(Exception $e){
-            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
             $err = $info . $e->getMessage();
-            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
         }
         //Send product to WooCommerce END
 	}
@@ -370,7 +370,7 @@ class ModelCatalogProduct extends Model {
                 $this->editProduct($product_id, $product_data);
             }
             catch(Exception $e){
-                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
                 $err = $info . $e->getMessage();
                 $this->wcLog('wcImport_err_log', $err, false);
             }
@@ -388,9 +388,9 @@ class ModelCatalogProduct extends Model {
             //wc end
         }
         catch(Exception $e){
-            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
             $err = $info . $e->getMessage();
-            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
         }
 	    
 		$this->event->trigger('pre.admin.product.delete', $product_id);
@@ -796,9 +796,9 @@ class ModelCatalogProduct extends Model {
             $product_id = curl_exec($curl);
         }
         catch(Exception $e){
-            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
             $err = $info . $e->getMessage();
-            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
         }
         
         curl_close($curl);
@@ -887,6 +887,8 @@ class ModelCatalogProduct extends Model {
         if (isset($data['product_option'])) {
             $option_add_to_dish = false;//Добавить к блюду
             foreach ($data['product_option'] as $product_option) {
+                //$this->wcLog('product_option', $product_option, true);
+                $quantity = $product_option['quantity'];
                 $option_name = $product_option['name'];
                 $option_id = $product_option['option_id'];
                 $product_option_value = $product_option['product_option_value'];
@@ -974,9 +976,9 @@ class ModelCatalogProduct extends Model {
             $wc_product_id = $this->wcCurl($queryData, $queryUrl);
         }
         catch(Exception $e){
-            $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+            $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
             $err = $info . $e->getMessage();
-            $this->wcLog(__METHOD__ .'_err_log', $err, false);
+            $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
         }
         
         if(is_numeric($wc_product_id)){
@@ -1147,9 +1149,9 @@ class ModelCatalogProduct extends Model {
                 $this->wcCurl($queryData, $queryUrl);
             }
             catch(Exception $e){
-                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
                 $err = $info . $e->getMessage();
-                $this->wcLog(__METHOD__ .'_err_log', $err, false);
+                $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
             }
             
             if(is_numeric($wc_product_id)){
@@ -1164,9 +1166,9 @@ class ModelCatalogProduct extends Model {
                 return $this->addProductToWc($data, $product_id);
             }
             catch(Exception $e){
-                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
                 $err = $info . $e->getMessage();
-                $this->wcLog(__METHOD__ .'_err_log', $err, false);
+                $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
             }
         }
         
@@ -1185,9 +1187,9 @@ class ModelCatalogProduct extends Model {
                 $result = $this->wcCurl($queryData, $queryUrl);
             }
             catch(Exception $e){
-                $info = 'В методе: ' . __METHOD__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
+                $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
                 $err = $info . $e->getMessage();
-                $this->wcLog(__METHOD__ .'_err_log', $err, false);
+                $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
             }
             //$this->wcLog('wc_delete_log', $result, false);
             return $result;
