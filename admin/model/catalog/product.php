@@ -317,6 +317,43 @@ class ModelCatalogProduct extends Model {
 			$this->addProduct($data);
 		}
 	}
+ 
+	//wc
+    public function copyWcProduct($product_id) {
+        $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+        
+        if ($query->num_rows) {
+            $data = $query->row;
+            
+            $data['product_attribute'] = $this->getProductAttributes($product_id);
+            $data['product_description'] = $this->getProductDescriptions($product_id);
+            $data['product_discount'] = $this->getProductDiscounts($product_id);
+            $data['product_filter'] = $this->getProductFilters($product_id);
+            $data['product_image'] = $this->getProductImages($product_id);
+            $data['product_option'] = $this->getProductOptions($product_id);
+            $data['product_related'] = $this->getProductRelated($product_id);
+            $data['product_reward'] = $this->getProductRewards($product_id);
+            $data['product_special'] = $this->getProductSpecials($product_id);
+            $data['product_category'] = $this->getProductCategories($product_id);
+            $data['product_download'] = $this->getProductDownloads($product_id);
+            $data['product_layout'] = $this->getProductLayouts($product_id);
+            $data['product_store'] = $this->getProductStores($product_id);
+            $data['product_recurrings'] = $this->getRecurrings($product_id);
+            
+           return $data;
+        }
+    }
+	
+	public function wcImport($data)
+    {
+        $wc_products_arr = json_decode($data['wc_products_arr']);
+        foreach ($wc_products_arr as $product_id){
+            $product_data = $this->copyWcProduct($product_id);
+            $this->editProduct($product_id, $product_data);
+            $this->wcLog($product_id, $product_data, false);
+        }
+    }
+    //wc END
 
 	public function deleteProduct($product_id) {
 	    

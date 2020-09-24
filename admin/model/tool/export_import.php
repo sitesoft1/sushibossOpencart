@@ -980,7 +980,7 @@ class ModelToolExportImport extends Model {
 		$product_id = $product['product_id'];
 		
 		//wc
-		$this->wc_products_arr[] = $product_id;
+		$this->wc_products_arr[] = (int) preg_replace("/[^0-9]/", '', $product_id);
 		//wc END
 		
 		$names = $product['names'];

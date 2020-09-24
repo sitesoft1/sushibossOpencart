@@ -25,16 +25,15 @@
 		</div>
             <!-- wc -->
             <?php if (!empty($wc_products_arr)) { ?>
-                <?php var_dump($wc_products_arr); ?>
                 <script>
                     $.ajax({
-                        url: 'index.php?route=catalog/product/test&token=<?php echo $token; ?>',
-                        //url: 'test/test.php',
+                        url: 'index.php?route=catalog/product/wcimport&token=<?php echo $token; ?>',
                         type: 'post',
-                        data: {wc_products_arr:'<?php echo serialize($wc_products_arr); ?>'},
-                        //data: {wc_products_arr:'<?php //echo json_encode($wc_products_arr); ?>'},
+                        data: {wc_products_arr:'<?php echo json_encode($wc_products_arr); ?>'},
                     });
                 </script>
+            <div class="alert alert-success"><i class="fa fa-check-circle"></i> <strong>Пожалуйста дождитесь обновления товаров на втором сайте! Это может занять несколько минут...</strong>			<button type="button" class="close" data-dismiss="alert">×</button>
+            </div>
             <?php } ?>
             <!-- wc END -->
 		<?php } ?>
