@@ -382,7 +382,8 @@ class ModelCatalogProduct extends Model {
             //$this->wcLog($product_id, $product_data, false);
             //Пауза для сборки мусора
     
-            time_nanosleep(0, 100000000);// 1/10-я секунды.
+            //time_nanosleep(0, 100000000);// 1/10-я секунды.
+            time_nanosleep(0, 10000000);// 1/100-я секунды.
             gc_collect_cycles();
             
             /*
