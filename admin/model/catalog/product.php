@@ -1,5 +1,5 @@
 <?php
-set_time_limit(0);
+//set_time_limit(0);
 class ModelCatalogProduct extends Model {
 	public function addProduct($data) {
 		$this->event->trigger('pre.admin.product.add', $data);
@@ -293,7 +293,7 @@ class ModelCatalogProduct extends Model {
         
         //Send product to WooCommerce
         try {
-            $wc_product_id = $this->updateProductToWc($data, $product_id);//Pomenyat metod na edit...
+            $wc_product_id = $this->updateProductToWc($data, $product_id);
         }
         catch(Exception $e){
             $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
@@ -335,7 +335,8 @@ class ModelCatalogProduct extends Model {
 	}
  
 	//wc
-    public function copyWcProduct($product_id) {
+    public function copyWcProduct($product_id)
+    {
         $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
         
         if ($query->num_rows) {
@@ -363,11 +364,12 @@ class ModelCatalogProduct extends Model {
 	public function wcImport($data)
     {
         $wc_products_arr = json_decode($data['wc_products_arr']);
+        $i=1;
         foreach ($wc_products_arr as $product_id){
             $product_data = $this->copyWcProduct($product_id);
             
             try {
-                $this->editProduct($product_id, $product_data);
+                $wc_product_id = $this->updateProductToWc($product_data, $product_id);
             }
             catch(Exception $e){
                 $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
@@ -375,7 +377,17 @@ class ModelCatalogProduct extends Model {
                 $this->wcLog('wcImport_err_log', $err, false);
             }
             
-            $this->wcLog($product_id, $product_data, false);
+            //$this->wcLog($product_id, $product_data, false);
+            //Пауза для сборки мусора
+            
+            $check = $i%10;
+            if($check == 0){
+                time_nanosleep(0, 100000000);// 1/10-я секунды
+                gc_collect_cycles();
+            }else{
+                time_nanosleep(0, 10000000);// 1/100-я секунды
+            }
+            $i++;
         }
     }
     //wc END
@@ -778,8 +790,6 @@ class ModelCatalogProduct extends Model {
 	//wc #################################################
     public function wcCurl($queryData, $queryUrl)
     {
-        //$queryUrl = 'https://sushisetboss.com/_oc_import/import.php';
-    
         $queryData = http_build_query($queryData);
     
         $curl = curl_init();
@@ -799,6 +809,7 @@ class ModelCatalogProduct extends Model {
             $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
             $err = $info . $e->getMessage();
             $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
+            return false;
         }
         
         curl_close($curl);
@@ -835,14 +846,14 @@ class ModelCatalogProduct extends Model {
         }
     
         if (isset($data['image']) and !empty($data['image'])) {
-            //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];// FOR PRODUCTION
-            $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];// FOR LOCALHOST
+            $wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];// FOR PRODUCTION
+            //$wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];// FOR LOCALHOST
         }
     
         if (isset($data['product_image']) and !empty($data['product_image'])) {
             foreach ($data['product_image'] as $product_image) {
-                //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $product_image['image'];// FOR PRODUCTION
-                $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
+                $wc_product_images[] = HTTPS_CATALOG . 'image/' . $product_image['image'];// FOR PRODUCTION
+                //$wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
             }
         }
     
@@ -1016,14 +1027,14 @@ class ModelCatalogProduct extends Model {
             }
     
             if (isset($data['image']) and !empty($data['image'])) {
-                //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];// FOR PRODUCTION
-                $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];// FOR LOCALHOST
+                $wc_product_images[] = HTTPS_CATALOG . 'image/' . $data['image'];// FOR PRODUCTION
+                //$wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $data['image'];// FOR LOCALHOST
             }
     
             if (isset($data['product_image']) and !empty($data['product_image'])) {
                 foreach ($data['product_image'] as $product_image) {
-                    //$wc_product_images[] = HTTPS_CATALOG . 'image/' . $product_image['image'];// FOR PRODUCTION
-                    $wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
+                    $wc_product_images[] = HTTPS_CATALOG . 'image/' . $product_image['image'];// FOR PRODUCTION
+                    //$wc_product_images[] = 'https://sushiboss.od.ua/' . 'image/' . $product_image['image'];// FOR LOCALHOST
                 }
             }
     
@@ -1146,7 +1157,7 @@ class ModelCatalogProduct extends Model {
     
             try {
                 //send request
-                $this->wcCurl($queryData, $queryUrl);
+                $result = $this->wcCurl($queryData, $queryUrl);
             }
             catch(Exception $e){
                 $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
@@ -1163,12 +1174,14 @@ class ModelCatalogProduct extends Model {
             
             try {
                 //если не прописан mpn то добавляем как новый товар
-                return $this->addProductToWc($data, $product_id);
+                $wc_product_id = $this->addProductToWc($data, $product_id);
+                return $wc_product_id;
             }
             catch(Exception $e){
                 $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
                 $err = $info . $e->getMessage();
                 $this->wcLog(__FUNCTION__ .'_err_log', $err, false);
+                return false;
             }
         }
         
