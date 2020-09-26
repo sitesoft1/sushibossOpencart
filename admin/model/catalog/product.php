@@ -370,6 +370,8 @@ class ModelCatalogProduct extends Model {
             
             try {
                 $wc_product_id = $this->updateProductToWc($product_data, $product_id);
+                //Попробуем освободить память
+                $product_data = null; unset($product_data);
             }
             catch(Exception $e){
                 $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
@@ -379,7 +381,11 @@ class ModelCatalogProduct extends Model {
             
             //$this->wcLog($product_id, $product_data, false);
             //Пауза для сборки мусора
+    
+            time_nanosleep(0, 100000000);// 1/10-я секунды
+            gc_collect_cycles();
             
+            /*
             $check = $i%10;
             if($check == 0){
                 time_nanosleep(0, 100000000);// 1/10-я секунды
@@ -387,8 +393,13 @@ class ModelCatalogProduct extends Model {
             }else{
                 time_nanosleep(0, 10000000);// 1/100-я секунды
             }
+            */
+            
             $i++;
         }
+    
+        $this->wcLog('wc_import_final', 'wc import end !!!', false);
+        return true;
     }
     //wc END
 
@@ -814,7 +825,7 @@ class ModelCatalogProduct extends Model {
         
         curl_close($curl);
         
-        $this->wcLog('wc_log', $product_id, false);
+        //$this->wcLog('wc_log', $product_id, false);
         return $product_id;
     }
     
@@ -985,6 +996,9 @@ class ModelCatalogProduct extends Model {
             //form request data END
             //send request
             $wc_product_id = $this->wcCurl($queryData, $queryUrl);
+            
+            $queryData = null; unset($queryData);
+            $data = null; unset($data);
         }
         catch(Exception $e){
             $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
@@ -1158,6 +1172,8 @@ class ModelCatalogProduct extends Model {
             try {
                 //send request
                 $result = $this->wcCurl($queryData, $queryUrl);
+                $queryData = null; unset($queryData);
+                $data = null; unset($data);
             }
             catch(Exception $e){
                 $info = 'В методе: ' . __FUNCTION__ . ' около строки: ' .  __LINE__ . ' произошла ошибка API: ';
@@ -1175,6 +1191,7 @@ class ModelCatalogProduct extends Model {
             try {
                 //если не прописан mpn то добавляем как новый товар
                 $wc_product_id = $this->addProductToWc($data, $product_id);
+                $data = null; unset($data);
                 return $wc_product_id;
             }
             catch(Exception $e){

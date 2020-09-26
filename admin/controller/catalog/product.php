@@ -14,12 +14,14 @@ class ControllerCatalogProduct extends Controller {
 	
 	public function wcimport()
     {
+        //echo 'done!';
         $this->load->language('catalog/product');
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('catalog/product');
         if(($this->request->server['REQUEST_METHOD'] == 'POST')) {
             $this->model_catalog_product->wcImport($this->request->post);
         }
+       // return true;
     }
 
 	public function add() {
