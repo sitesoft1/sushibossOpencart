@@ -961,7 +961,7 @@ class ModelCatalogProduct extends Model {
         //form product data END
     
         //form request data
-        $queryUrl = 'https://sushisetboss.com/_oc_import/add_oc_product.php';
+        $queryUrl = 'https://test.sushisetboss.com/_oc_import/add_oc_product.php';
         
         $queryData = [];
         if(isset($wc_product_name) and !empty($wc_product_name)){
@@ -1023,12 +1023,12 @@ class ModelCatalogProduct extends Model {
             
             //form request data
             $queryData = [];
-            $queryUrl = 'https://sushisetboss.com/_oc_import/update_oc_product.php';
+            $queryUrl = 'https://test.sushisetboss.com/_oc_import/update_oc_product.php';
             
             $wc_product_id = $data['mpn'];
             $queryData['wc_product_id'] = $wc_product_id;
             
-            $lang = 2;//Язык данные из которого будем передавать.
+            $lang = 2;//Язык данные из которого будем передавать
             //form product data
             $wc_price = (float)$data['price'];
             $wc_price = round($wc_price);
@@ -1212,7 +1212,7 @@ class ModelCatalogProduct extends Model {
     
     public function deleteWcProduct($product_id)
     {
-        $queryUrl = 'https://sushisetboss.com/_oc_import/del_oc_product.php';
+        $queryUrl = 'https://test.sushisetboss.com/_oc_import/del_oc_product.php';
         $queryData = [];
         $query = $this->db->query("SELECT mpn FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
         $wc_product_id = $query->row['mpn'];
