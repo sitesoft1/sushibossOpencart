@@ -1028,7 +1028,7 @@ class ModelCatalogProduct extends Model {
             $wc_product_id = $data['mpn'];
             $queryData['wc_product_id'] = $wc_product_id;
             
-            $lang = 2;//Язык данные из которого будем передавать
+            $lang = 2;//Язык данные из которого будем передавать.
             //form product data
             $wc_price = (float)$data['price'];
             $wc_price = round($wc_price);
