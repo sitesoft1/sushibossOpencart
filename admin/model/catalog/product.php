@@ -842,10 +842,17 @@ class ModelCatalogProduct extends Model {
     
     public function addProductToWc($data, $product_id)
     {
+        //$this->wcLog('data_log',$data);
         $lang = 2;//Язык данные из которого будем передавать
+        
         //form product data
         $wc_price = (float)$data['price'];
         $wc_price = round($wc_price);
+    
+        $product_special = end($data['product_special']);
+        $wc_special_price = (float)$product_special['price'];
+        $wc_special_price = round($wc_special_price);
+
         $wc_model = $data['model'];
         $wc_product_images = [];
         if(!empty($data['status'])){
@@ -967,15 +974,21 @@ class ModelCatalogProduct extends Model {
         //form product data END
     
         //form request data
-        $queryUrl = 'https://sushisetboss.com/_oc_import/add_oc_product.php';
+        $queryUrl = 'https://sushisetboss.com/add_oc_product.php';
+        //$queryUrl = 'http://test.sushisetboss.com/add_oc_product.php';
         
         $queryData = [];
         if(isset($wc_product_name) and !empty($wc_product_name)){
             $queryData['wc_product_name'] = $wc_product_name;
         }
+        
         if(isset($wc_price) and !empty($wc_price)){
             $queryData['wc_price'] = $wc_price;
         }
+        if(isset($wc_special_price) and !empty($wc_special_price)){
+            $queryData['wc_special_price'] = $wc_special_price;
+        }
+        
         if(isset($wc_product_description) and !empty($wc_product_description)){
             $queryData['wc_product_description'] = $wc_product_description;
         }
@@ -1030,7 +1043,8 @@ class ModelCatalogProduct extends Model {
             
             //form request data
             $queryData = [];
-            $queryUrl = 'https://sushisetboss.com/_oc_import/update_oc_product.php';
+            $queryUrl = 'https://sushisetboss.com/update_oc_product.php';
+            //$queryUrl = 'http://test.sushisetboss.com/update_oc_product.php';
             
             $wc_product_id = $data['mpn'];
             $queryData['wc_product_id'] = $wc_product_id;
@@ -1039,6 +1053,11 @@ class ModelCatalogProduct extends Model {
             //form product data
             $wc_price = (float)$data['price'];
             $wc_price = round($wc_price);
+    
+            $product_special = end($data['product_special']);
+            $wc_special_price = (float)$product_special['price'];
+            $wc_special_price = round($wc_special_price);
+            
             $wc_model = $data['model'];
             $wc_product_images = [];
     
@@ -1163,6 +1182,9 @@ class ModelCatalogProduct extends Model {
             if(isset($wc_price) and !empty($wc_price)){
                 $queryData['wc_price'] = $wc_price;
             }
+            if(isset($wc_special_price) and !empty($wc_special_price)){
+                $queryData['wc_special_price'] = $wc_special_price;
+            }
             if(isset($wc_product_description) and !empty($wc_product_description)){
                 $queryData['wc_product_description'] = $wc_product_description;
             }
@@ -1226,7 +1248,7 @@ class ModelCatalogProduct extends Model {
     
     public function deleteWcProduct($product_id)
     {
-        $queryUrl = 'https://sushisetboss.com/_oc_import/del_oc_product.php';
+        $queryUrl = 'https://sushisetboss.com/del_oc_product.php';
         $queryData = [];
         $query = $this->db->query("SELECT mpn FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
         $wc_product_id = $query->row['mpn'];
